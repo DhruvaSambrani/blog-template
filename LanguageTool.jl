@@ -1,5 +1,3 @@
-#! /usr/bin/env julia
-
 using JSON
 using HTTP
 using REPL.TerminalMenus
@@ -44,8 +42,6 @@ function apply(TEXT, fixes)
     output = IOBuffer()
     wrotetill = 0
     for (idx, fixpair) in enumerate(fixes)
-        clear()
-        println(stderr, "Applying fix $(idx)")
         fix, fix_range = fixpair
         if isnothing(fix)
             fix = SubString(TEXT, first(fix_range), last(fix_range))
@@ -53,10 +49,6 @@ function apply(TEXT, fixes)
         write(output, TEXT[nextind(TEXT, wrotetill) : prevind(TEXT, first(fix_range))])
         write(output, fix)
         wrotetill = thisind(TEXT, last(fix_range))
-        t = String(take!(output))
-        write(output, t)
-        println(stderr, t)
-        readline()
     end
     if thisind(TEXT, wrotetill) < lastindex(TEXT)
         write(output, SubString(TEXT, nextind(TEXT, wrotetill)))
@@ -104,7 +96,7 @@ function main(FILE, PORT, LTPATH, RUN_SERVER)
     # start LT Server
     if RUN_SERVER
         println(stderr, "Attempting to run server from $(LTPATH) on PORT $(PORT)")
-        run(`java java -cp $(LTPATH)languagetool-server.jar $(LTPATH)org.languagetool.server.HTTPServer --port $(PORT)`, wait=false)
+        run(`java -cp $(LTPATH)/languagetool-server.jar org.languagetool.server.HTTPServer --port $(PORT)`, wait=false)
     end
 
     LOCALWORDS = readlines(".dict")
@@ -138,7 +130,7 @@ Preferably, save stdout to a variable and write that.")
         arg_type = Int
     "--ltpath", "-l"
         help = "Directory where LanguageTool jar files reside"
-        default = "~/.LanguageTool"
+        default = "./LanguageTool"
         arg_type = String
     "--no_run_server", "-n"
         help = "Do not attempt to start a new server"

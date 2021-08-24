@@ -1,15 +1,39 @@
 #! /bin/sh
 
-spcheck() {
-    julia -q --project LanguageTool.jl $@
+setupjl() {
+    julia -q --project -E "import Pkg; Pkg.activate(\".\"); Pkg.instantiate()"
+    echo "If you see something like \`command ___ not found\`, then you will have to install julia"
+    echo "Otherwise, your are done!"
 }
 
+setuplt() {
+    curl -#L https://languagetool.org/download/LanguageTool-stable.zip -o lt.zip
+    unzip lt.zip
+    mv LanguageTool-5.4 LanguageTool
+    rm lt.zip
+    java --version
+    echo "If you see something like \`command ___ not found\`, then you will have to install one of the following"
+    echo "1. Java, 2. curl, 3. unzip"
+    echo "Otherwise, your are done!"
+}
+
+spcheck() {
+    julia -q --project LanguageTool.jl "$1"
+}
 new() {
     sensible-editor "$(dirname $0)/posts/$(date +%Y-%m-%d\ %H%M%S)"
 }
 
 _tree() {
     tree $(dirname $0)/posts
+}
+
+serve() {
+    PORT=$1
+    HOST=$2
+    [[ -z $PORT ]] && PORT=8000
+    [[ -z $HOST ]] && HOST=127.0.0.1
+    julia -q --project -E "using Franklin; Franklin.serve(host=\"$HOST\", port=$PORT)"
 }
 
 publish() {
@@ -21,19 +45,25 @@ publish() {
 help() {
     echo "Usage: blog action"
     echo "Actions:"
-    echo "  spcheck fname [opts]\tRun LanguageTool.jl on \`fname\` with \`opts\` options"
+    echo "  spcheck fname \tRun LanguageTool.jl on \`fname\`." 
+    echo "  \t\t\tFor advanced usage, run julia --project LanguageTool.jl" 
     echo "  new\t\t\tNew post"
     echo "  tree\t\t\tList posts"
     echo "  publish\t\tCommit and push all changes"
+    echo "  serve [port [host]]\tBuild and serve site on host:port. Default, localhost:8081"
+    echo "  setupjl\t\tSingle run to setup julia. Requires julia to be installed"
+    echo "  setuplt\t\tSingle run to setup LanguageTool. Requires curl, unzip, java"
     echo "  help\t\t\tDisplay this help screen"
 }
 
 case "${1}" in
-    spcheck) spcheck ${@:2};;
+    spcheck) spcheck "$2";;
     new) new;;
     tree) _tree;;
     publish) publish;;
+    serve) serve $2 $3;;
+    setupjl) setupjl;;
+    setuplt) setuplt;;
     *) help;;
 esac
-
 
