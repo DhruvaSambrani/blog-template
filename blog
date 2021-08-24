@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 setupjl() {
     julia -q --project -E "import Pkg; Pkg.activate(\".\"); Pkg.instantiate()"
@@ -43,17 +43,17 @@ publish() {
 }
 
 help() {
-    echo "Usage: blog action"
-    echo "Actions:"
-    echo "  spcheck fname \tRun LanguageTool.jl on \`fname\`." 
-    echo "  \t\t\tFor advanced usage, run julia --project LanguageTool.jl" 
-    echo "  new\t\t\tNew post"
-    echo "  tree\t\t\tList posts"
-    echo "  publish\t\tCommit and push all changes"
-    echo "  serve [port [host]]\tBuild and serve site on host:port. Default, localhost:8081"
-    echo "  setupjl\t\tSingle run to setup julia. Requires julia to be installed"
-    echo "  setuplt\t\tSingle run to setup LanguageTool. Requires curl, unzip, java"
-    echo "  help\t\t\tDisplay this help screen"
+    echo -e "Usage: blog action"
+    echo -e "Actions:"
+    echo -e "  spcheck fname \tRun LanguageTool.jl on \`fname\`." 
+    echo -e "  \t\t\tFor advanced usage, run julia --project LanguageTool.jl" 
+    echo -e "  new\t\t\tNew post"
+    echo -e "  tree\t\t\tList posts"
+    echo -e "  publish\t\tCommit and push all changes"
+    echo -e "  serve [port [host]]\tBuild and serve site on host:port. Default, localhost:8081"
+    echo -e "  setupjl\t\tSingle run to setup julia. Requires julia to be installed"
+    echo -e "  setuplt\t\tSingle run to setup LanguageTool. Requires curl, unzip, java"
+    echo -e "  help\t\t\tDisplay this help screen"
 }
 
 case "${1}" in
