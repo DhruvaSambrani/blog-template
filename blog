@@ -46,7 +46,7 @@ help() {
     echo -e "Usage: blog action"
     echo -e "Actions:"
     echo -e "  spcheck fname \tRun LanguageTool.jl on \`fname\`." 
-    echo -e "  \t\t\tFor advanced usage, run julia --project LanguageTool.jl" 
+    echo -e "  \t\t\tFor advanced usage, \`run julia --project LanguageTool.jl --help\`" 
     echo -e "  new\t\t\tNew post"
     echo -e "  tree\t\t\tList posts"
     echo -e "  publish\t\tCommit and push all changes"
